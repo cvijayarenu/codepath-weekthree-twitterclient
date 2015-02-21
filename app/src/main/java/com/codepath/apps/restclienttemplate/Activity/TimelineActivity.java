@@ -1,12 +1,18 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.Adapters.TweetsArrayAdapter;
+import com.codepath.apps.restclienttemplate.TwitterApplication;
+import com.codepath.apps.restclienttemplate.Utils.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -18,7 +24,8 @@ import java.util.ArrayList;
 
 
 public class TimelineActivity extends ActionBarActivity {
-    
+
+    private static final int REQUEST_CODE = 1;
     private TwitterClient client;
     private ArrayList<Tweet> tweets;
     private TweetsArrayAdapter aTweets;
@@ -40,6 +47,7 @@ public class TimelineActivity extends ActionBarActivity {
     }
 
     private void populateTimeline() {
+        aTweets.clear();
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
@@ -73,9 +81,20 @@ public class TimelineActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_compose) {
+            Intent compose = new Intent(this, ComposeActivity.class);
+            startActivityForResult(compose, REQUEST_CODE);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            populateTimeline();
+        }
     }
 }

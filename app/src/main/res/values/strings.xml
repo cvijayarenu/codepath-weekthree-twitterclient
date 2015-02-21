@@ -7,5 +7,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_compose">Compose</string>
+    <string name="title_compose">Compose your tweet</string>
+    <string name="publish">Publish</string>
+    <string name="publishsuccess">Tweet Published!!!</string>
+    <string name="publisfailure">Tweet Publish Failed :( </string>
+    <string name="title_activity_compose">Compose</string>
 
 </resources>

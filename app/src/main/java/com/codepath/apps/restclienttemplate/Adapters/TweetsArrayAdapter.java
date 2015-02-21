@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.Adapters;
 
 import android.content.Context;
 import android.text.format.DateUtils;
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -36,10 +37,12 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         }
         ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
         TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUserName);
+        TextView tvscreenname = (TextView) convertView.findViewById(R.id.tvscreenName);
         TextView tvBody = (TextView) convertView.findViewById(R.id.tvBody);
         TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
         
-        tvUsername.setText(tweet.getUser().getScreenname());
+        tvUsername.setText(tweet.getUser().getName());
+        tvscreenname.setText("@" + tweet.getUser().getScreenname());
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent);
         tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));

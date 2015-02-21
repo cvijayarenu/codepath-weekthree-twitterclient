@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.Utils;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FlickrApi;
@@ -63,8 +63,10 @@ public class TwitterClient extends OAuthBaseClient {
     }
     
     
-    public void composeTweet(AsyncHttpResponseHandler handler){
-        
-        
+    public void composeTweet(AsyncHttpResponseHandler handler, String post){
+        String apiUrl = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", post);
+        getClient().post(apiUrl, params, handler);
     }
 }
