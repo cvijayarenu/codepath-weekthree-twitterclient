@@ -7,7 +7,7 @@ import android.content.Context;
  * including the image cache in memory and on disk. This also adds a singleton
  * for accessing the relevant rest client.
  *
- *     RestClient client = TwitterApplication.getRestClient();
+ *     TwitterClient client = TwitterApplication.getRestClient();
  *     // use client to send requests to API
  *
  */
@@ -20,7 +20,7 @@ public class TwitterApplication extends com.activeandroid.app.Application {
 		TwitterApplication.context = this;
 	}
 
-	public static RestClient getRestClient() {
-		return (RestClient) RestClient.getInstance(RestClient.class, TwitterApplication.context);
+	public static TwitterClient getRestClient() {
+		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, TwitterApplication.context);
 	}
 }
