@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.Adapters.TweetsArrayAdapter;
 import com.codepath.apps.restclienttemplate.TwitterApplication;
+import com.codepath.apps.restclienttemplate.Utils.EndlessScrollListener;
 import com.codepath.apps.restclienttemplate.Utils.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -42,6 +43,13 @@ public class TimelineActivity extends ActionBarActivity {
         tweets = new ArrayList<>();
         aTweets = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
+        lvTweets.setOnScrollListener( new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                populateTimeline(false);
+            }
+        });
+        
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         
         twitterClient = TwitterApplication.getRestClient();
@@ -61,6 +69,8 @@ public class TimelineActivity extends ActionBarActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        
+        
         
     }
 
