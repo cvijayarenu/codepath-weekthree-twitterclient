@@ -28,6 +28,7 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_KEY = "dB7DKG5KlobYkY99gLzdnxWTo";       // Change this
 	public static final String REST_CONSUMER_SECRET = "lbp0WrUQ0ow1uKedjbSu3c17BHM3yoLGM7fRnq9iMg4tIsyvJ9"; // Change this
 	public static final String REST_CALLBACK_URL = "oauth://cptwitterclient"; // Change this (here and in manifest)
+    public static final int REST_TWEETS_COUNT = 25;
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -53,11 +54,15 @@ public class TwitterClient extends OAuthBaseClient {
 	 */
     
     
-    public void getHomeTimeline(AsyncHttpResponseHandler handler){
+    public void getHomeTimeline(Long max_id, AsyncHttpResponseHandler handler){
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", 25);
-        params.put("since_id", 1);
+        params.put("count", REST_TWEETS_COUNT);
+//        params.put("since_id",1 );
+        if(max_id != null){
+            params.put("max_id", max_id);
+        }
+
         getClient().get(apiUrl, params, handler);
         
     }

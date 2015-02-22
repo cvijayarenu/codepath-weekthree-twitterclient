@@ -31,7 +31,8 @@ public class TimelineActivity extends ActionBarActivity {
     private TweetsArrayAdapter aTweets;
     private ListView lvTweets;
     private SwipeRefreshLayout swipeContainer;
-
+    private Long max_id = null;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,7 @@ public class TimelineActivity extends ActionBarActivity {
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         
         twitterClient = TwitterApplication.getRestClient();
-        populateTimeline();
+        populateTimeline(true);
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -52,7 +53,7 @@ public class TimelineActivity extends ActionBarActivity {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                populateTimeline();
+                populateTimeline(true);
             }
         });
 
@@ -63,14 +64,17 @@ public class TimelineActivity extends ActionBarActivity {
         
     }
 
-    private void populateTimeline() {
-        aTweets.clear();
-        twitterClient.getHomeTimeline(new JsonHttpResponseHandler() {
+    private void populateTimeline(Boolean clear) {
+        if (clear) {
+            aTweets.clear();
+        }
+        twitterClient.getHomeTimeline(max_id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
                 //Log.d("DEBUG", json.toString());
                 swipeContainer.setRefreshing(false);
                 aTweets.addAll(Tweet.fromJsonArray(json));
+                max_id = aTweets.getItem(aTweets.getCount() - 1 ).getUid();
             }
 
             @Override
@@ -112,7 +116,7 @@ public class TimelineActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            populateTimeline();
+            populateTimeline(true);
         }
     }
 }
