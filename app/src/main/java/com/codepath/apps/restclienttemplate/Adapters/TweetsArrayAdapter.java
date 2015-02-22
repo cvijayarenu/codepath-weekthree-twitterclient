@@ -23,6 +23,14 @@ import java.util.Locale;
  */
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
 
+    // View lookup cache
+    private static class ViewHolder {
+        ImageView ivProfileImage ;
+        TextView tvUsername ;
+        TextView tvscreenname ;
+        TextView tvBody ;
+        TextView tvTime ;
+    }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
         super(context,android.R.layout.simple_list_item_1 , tweets);
@@ -31,23 +39,28 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Tweet tweet = getItem(position);
+        ViewHolder viewHolder;
+        
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
-            
+            viewHolder = new ViewHolder();
+            viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
+            viewHolder.tvUsername = (TextView) convertView.findViewById(R.id.tvUserName);
+            viewHolder.tvscreenname = (TextView) convertView.findViewById(R.id.tvscreenName);
+            viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
+            viewHolder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
-        TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUserName);
-        TextView tvscreenname = (TextView) convertView.findViewById(R.id.tvscreenName);
-        TextView tvBody = (TextView) convertView.findViewById(R.id.tvBody);
-        TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
-        
-        tvUsername.setText(tweet.getUser().getName());
-        tvscreenname.setText("@" + tweet.getUser().getScreenname());
-        tvBody.setText(tweet.getBody());
-        ivProfileImage.setImageResource(android.R.color.transparent);
-        tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
 
-        Picasso.with(getContext()).load(tweet.getUser().getProfileImgUrl()).into(ivProfileImage);
+        viewHolder.tvUsername.setText(tweet.getUser().getName());
+        viewHolder.tvscreenname.setText("@" + tweet.getUser().getScreenname());
+        viewHolder.tvBody.setText(tweet.getBody());
+        viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
+        viewHolder.tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+
+        Picasso.with(getContext()).load(tweet.getUser().getProfileImgUrl()).into(viewHolder.ivProfileImage);
         
         return convertView; 
     }
