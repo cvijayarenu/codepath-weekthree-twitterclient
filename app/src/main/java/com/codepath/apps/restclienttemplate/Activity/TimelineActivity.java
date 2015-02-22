@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.codepath.apps.restclienttemplate.R;
@@ -47,6 +49,14 @@ public class TimelineActivity extends ActionBarActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 populateTimeline(false);
+            }
+        });
+        lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(TimelineActivity.this, TweetDetailedActivity.class);
+                i.putExtra("id", tweets.get(position).getUid());
+                startActivity(i); // brings up t
             }
         });
         

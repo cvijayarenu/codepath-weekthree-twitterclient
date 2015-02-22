@@ -54,6 +54,10 @@
             android:name=".Activity.ComposeActivity"
             android:label="@string/title_activity_compose" >
         </activity>
+        <activity
+            android:name=".Activity.TweetDetailedActivity"
+            android:label="@string/title_activity_tweet_detailed" >
+        </activity>
     </application>
 
 </manifest>
