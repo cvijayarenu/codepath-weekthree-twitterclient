@@ -77,6 +77,7 @@ public class TimelineActivity extends ActionBarActivity {
     private void populateTimeline(Boolean clear) {
         if (clear) {
             aTweets.clear();
+            max_id = null;
         }
         twitterClient.getHomeTimeline(max_id, new JsonHttpResponseHandler() {
             @Override
