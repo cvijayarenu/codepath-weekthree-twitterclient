@@ -14,5 +14,6 @@
     <string name="publisfailure">Tweet Publish Failed :( </string>
     <string name="title_activity_compose">Compose</string>
     <string name="title_activity_tweet_detailed">Tweet Info</string>
+    <string name="title_activity_twitter">TwitterActivity</string>
 
 </resources>
