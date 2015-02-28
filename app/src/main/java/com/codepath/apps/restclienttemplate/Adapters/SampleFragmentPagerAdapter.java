@@ -4,7 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.codepath.apps.restclienttemplate.Fragment.MentionFragment;
 import com.codepath.apps.restclienttemplate.Fragment.PageFragment;
+import com.codepath.apps.restclienttemplate.Fragment.TimelineFragment;
 
 /**
  * Created by chandrav on 2/28/15.
@@ -26,10 +28,11 @@ public class SampleFragmentPagerAdapter extends android.support.v4.app.FragmentP
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                
-                return PageFragment.newInstance(position + 1);
+                return TimelineFragment.newInstance();
+                //return PageFragment.newInstance(position + 1);
             case 1:
-                return PageFragment.newInstance(position + 1);
+                return MentionFragment.newInstance();
+                //return PageFragment.newInstance(position + 1);
             default:
                 return PageFragment.newInstance(position + 1);
         }

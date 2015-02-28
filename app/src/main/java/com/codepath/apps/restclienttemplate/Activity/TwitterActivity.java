@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.Activity;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +14,7 @@ import com.codepath.apps.restclienttemplate.R;
 
 
 public class TwitterActivity extends ActionBarActivity {
+    private static final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +46,21 @@ public class TwitterActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_compose) {
+            Intent compose = new Intent(this, ComposeActivity.class);
+            startActivityForResult(compose, REQUEST_CODE);
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // TODO . populateTimeline(true);
+        }
     }
 }

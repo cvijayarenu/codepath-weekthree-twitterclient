@@ -15,5 +15,6 @@
     <string name="title_activity_compose">Compose</string>
     <string name="title_activity_tweet_detailed">Tweet Info</string>
     <string name="title_activity_twitter">TwitterActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
