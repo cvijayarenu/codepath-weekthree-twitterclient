@@ -98,7 +98,7 @@ public class UserActivity extends ActionBarActivity {
                     
                     
                     tvName.setText(name);
-                    tvFollowing.setText(following + " Following");
+                    tvFollowing.setText(following + " Following  ");
                     tvFollowers.setText(followers + " Followers");
                     tvTagline.setText(tagline);
                     Picasso.with(UserActivity.this).load(profileimageurl).into(ivprofileimage);

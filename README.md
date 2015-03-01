@@ -29,4 +29,17 @@
 
 ![Video Walkthrough](walkthrough.gif)
 
+
+## Week4. 
+ * [X] User can switch between Timeline and Mention views using tabs.
+ * [X] User can navigate to view their own profile
+ * [X] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
+ * [X] User can click on the profile image in any tweet to see another user's profile.
+ * [X] User can infinitely paginate any of these timelines (home, mentions, user) by scrolling to the bottom
+
+
+![Video Walkthrough](walkthrough2.gif)
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+
