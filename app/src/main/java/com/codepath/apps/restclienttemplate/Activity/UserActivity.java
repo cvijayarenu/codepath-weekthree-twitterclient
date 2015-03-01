@@ -9,94 +9,120 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.Adapters.TweetsArrayAdapter;
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApplication;
 import com.codepath.apps.restclienttemplate.Utils.EndlessScrollListener;
 import com.codepath.apps.restclienttemplate.Utils.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-
-public class TimelineActivity extends ActionBarActivity {
-
+public class UserActivity extends ActionBarActivity {
     private static final int REQUEST_CODE = 1;
+    private long userid;
     private TwitterClient twitterClient;
+    private Long max_id = null;
+
     private ArrayList<Tweet> tweets;
     private TweetsArrayAdapter aTweets;
     private ListView lvTweets;
-    private SwipeRefreshLayout swipeContainer;
-    private Long max_id = null;
     
+    private TextView tvName;
+    private TextView tvTagline;
+    private TextView tvFollowing;
+    private TextView tvFollowers;
+    private ImageView ivprofileimage;
+    
+    
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+        setContentView(R.layout.activity_user);
+        userid = getIntent().getLongExtra("id", -1);
+        twitterClient = TwitterApplication.getRestClient();
 
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         tweets = new ArrayList<>();
         aTweets = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
-        lvTweets.setOnScrollListener( new EndlessScrollListener() {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                populateTimeline(false);
-            }
-        });
         lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(TimelineActivity.this, TweetDetailedActivity.class);
+                Intent i = new Intent(UserActivity.this, TweetDetailedActivity.class);
                 i.putExtra("id", tweets.get(position).getUid());
                 startActivity(i); // brings up t
             }
         });
+
         
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        tvName = (TextView) findViewById(R.id.tvUserName);
+        tvTagline = (TextView) findViewById(R.id.tvTagline);
+        tvFollowing = (TextView) findViewById(R.id.tvFollowing);
+        tvFollowers = (TextView) findViewById(R.id.tvFollowers);
+        ivprofileimage = (ImageView) findViewById(R.id.ivUserProfileImage);
         
-        twitterClient = TwitterApplication.getRestClient();
+        
+
+        populateUserinfo();
         populateTimeline(true);
 
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                populateTimeline(true);
-            }
-        });
+    }
 
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-        
-        
-        
+    private void populateUserinfo() {
+        twitterClient.getUserInfo(userid, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                //Toast.makeText(UserActivity.this, "Hello", Toast.LENGTH_SHORT).show();
+                try {
+                    String followers = json.getString("followers_count");
+                    String following = json.getString("friends_count");
+                    String name = json.getString("name");
+                    String tagline = json.getString("description");
+                    String profileimageurl = json.getString("profile_image_url");
+                    
+                    
+                    tvName.setText(name);
+                    tvFollowing.setText(following + " Following");
+                    tvFollowers.setText(followers + " Followers");
+                    tvTagline.setText(tagline);
+                    Picasso.with(UserActivity.this).load(profileimageurl).into(ivprofileimage);
+                    
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+            }
+
+            
+        });
     }
 
     private void populateTimeline(Boolean clear) {
-        if (clear) {
-            aTweets.clear();
-            max_id = null;
-        }
-        twitterClient.getHomeTimeline(max_id, new JsonHttpResponseHandler() {
+        twitterClient.getUserTimeline(userid, max_id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                //Log.d("DEBUG", json.toString());
-                swipeContainer.setRefreshing(false);
                 aTweets.addAll(Tweet.fromJsonArray(json));
-                max_id = aTweets.getItem(aTweets.getCount() - 1 ).getUid();
-                aTweets.notifyDataSetChanged();
+                //Toast.makeText(UserActivity.this, "Hello", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -109,10 +135,12 @@ public class TimelineActivity extends ActionBarActivity {
     }
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_timeline, menu);
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        
         return true;
     }
 
@@ -124,21 +152,10 @@ public class TimelineActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_compose) {
-            Intent compose = new Intent(this, ComposeActivity.class);
-            startActivityForResult(compose, REQUEST_CODE);
+        if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // REQUEST_CODE is defined above
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            populateTimeline(true);
-        }
     }
 }

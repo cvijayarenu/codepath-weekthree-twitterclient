@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.codepath.apps.restclienttemplate.Activity.TweetDetailedActivity;
@@ -76,6 +77,7 @@ public class TimelineFragment extends Fragment {
                 startActivity(i); // brings up t
             }
         });
+        
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 

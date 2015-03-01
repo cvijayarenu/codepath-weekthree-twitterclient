@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.restclienttemplate.Activity.UserActivity;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.squareup.picasso.Picasso;
@@ -17,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
 
 /**
  * Created by chandrav on 2/21/15.
@@ -38,7 +41,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Tweet tweet = getItem(position);
+        final Tweet tweet = getItem(position);
         ViewHolder viewHolder;
         
         if(convertView == null){
@@ -58,6 +61,17 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         viewHolder.tvscreenname.setText("@" + tweet.getUser().getScreenname());
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
+        viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext().getApplicationContext(), UserActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("id", tweet.getUser().getUid());
+                i.putExtra("screen_name", tweet.getUser().getScreenname());
+                v.getContext().startActivity(i);
+            }
+
+        });
         viewHolder.tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
 
         Picasso.with(getContext()).load(tweet.getUser().getProfileImgUrl()).into(viewHolder.ivProfileImage);
